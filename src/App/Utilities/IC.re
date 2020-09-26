@@ -6,7 +6,10 @@ type t =
   | B
   | C
   | D
-  | E;
+  | E
+  | F
+  | G
+  | H;
 
 /**
  * Get the IC-specific multiplier for calculating AP cost.
@@ -21,27 +24,21 @@ let%private getAPCostBaseByIC = ic =>
   | B => 2
   | C => 3
   | D => 4
-  | E => 15
+  | E => 5
+  | F => 8
+  | G => 10
+  | H => 20
   };
 
-/**
- * Get the IC-specific last SR where the AP cost for one points equals the cost
- * for each previous point.
- */
-let%private getLastSRWithConstantCost = ic => ic === E ? 14 : 12;
 
-/**
- * Returns the value that has to be multiplied with the AP cost base to get the
- * final cost for the given SR.
- */
-let%private getBaseMultiplier = (ic, sr) =>
-  sr - getLastSRWithConstantCost(ic) + 1 |> Int.max(1);
+
+
 
 /**
  * Returns the AP cost for a single SR with a specific IC.
  */
 let%private getCost = (ic, sr) =>
-  getAPCostBaseByIC(ic) * getBaseMultiplier(ic, sr);
+  getAPCostBaseByIC(ic) * sr;
 
 /**
  * Returns the AP cost between the defined lower and upper SR. The AP cost for
@@ -81,6 +78,9 @@ let icToStr = ic =>
   | C => "C"
   | D => "D"
   | E => "E"
+  | F => "F"
+  | G => "G"
+  | H => "H"
   };
 
 /**
@@ -94,6 +94,9 @@ let icToIx = ic =>
   | C => 2
   | D => 3
   | E => 4
+  | F => 5
+  | G => 6
+  | H => 7
   };
 
 module Decode = {
@@ -110,6 +113,9 @@ module Decode = {
         | "C" => C
         | "D" => D
         | "E" => E
+        | "F" => F
+        | "G" => G
+        | "H" => H
         | _ => raise(DecodeError("Unknown improvement cost: " ++ x))
         }
     );

@@ -5,7 +5,6 @@ var List = require("bs-platform/lib/js/list.js");
 var Caml_int32 = require("bs-platform/lib/js/caml_int32.js");
 var Json_decode = require("@glennsl/bs-json/src/Json_decode.bs.js");
 var Ix$OptolithClient = require("../../Data/Ix.bs.js");
-var Int$OptolithClient = require("../../Data/Int.bs.js");
 
 function getAPCostBaseByIC(ic) {
   switch (ic) {
@@ -18,25 +17,15 @@ function getAPCostBaseByIC(ic) {
     case /* D */3 :
         return 4;
     case /* E */4 :
-        return 15;
+        return 5;
+    case /* F */5 :
+        return 8;
+    case /* G */6 :
+        return 10;
+    case /* H */7 :
+        return 20;
     
   }
-}
-
-function getLastSRWithConstantCost(ic) {
-  if (ic === /* E */4) {
-    return 14;
-  } else {
-    return 12;
-  }
-}
-
-function getBaseMultiplier(ic, sr) {
-  return Int$OptolithClient.max(1, (sr - getLastSRWithConstantCost(ic) | 0) + 1 | 0);
-}
-
-function getCost(ic, sr) {
-  return Caml_int32.imul(getAPCostBaseByIC(ic), getBaseMultiplier(ic, sr));
 }
 
 function getAPForBounds(ic, l, u) {
@@ -45,7 +34,7 @@ function getAPForBounds(ic, l, u) {
         u
       ]);
   return List.fold_right((function (sr) {
-                var partial_arg = getCost(ic, sr);
+                var partial_arg = Caml_int32.imul(getAPCostBaseByIC(ic), sr);
                 return (function (param) {
                     return partial_arg + param | 0;
                   });
@@ -63,11 +52,11 @@ function getAPForRange(ic, fromSR, toSR) {
 }
 
 function getAPForInc(ic, fromSR) {
-  return getCost(ic, fromSR + 1 | 0);
+  return Caml_int32.imul(getAPCostBaseByIC(ic), fromSR + 1 | 0);
 }
 
 function getAPForDec(ic, fromSR) {
-  return -getCost(ic, fromSR) | 0;
+  return -Caml_int32.imul(getAPCostBaseByIC(ic), fromSR) | 0;
 }
 
 function icToStr(ic) {
@@ -82,6 +71,12 @@ function icToStr(ic) {
         return "D";
     case /* E */4 :
         return "E";
+    case /* F */5 :
+        return "F";
+    case /* G */6 :
+        return "G";
+    case /* H */7 :
+        return "H";
     
   }
 }
@@ -103,6 +98,12 @@ function t(json) {
         return /* D */3;
     case "E" :
         return /* E */4;
+    case "F" :
+        return /* F */5;
+    case "G" :
+        return /* G */6;
+    case "H" :
+        return /* H */7;
     default:
       throw [
             Json_decode.DecodeError,

@@ -48,7 +48,7 @@ test ('compressList', () => {
                                    }),
                                    finalCost: Nothing,
                                    naming: ActivatableCombinedName ({
-                                     addName: Just ("Weltfremd"),
+                                     addName: Just ("DeineDummheit"),
                                      baseName: "Persönlichkeitsschwäche",
                                      name: "Persönlichkeitsschwäche (Weltfremd)"
                                    }),

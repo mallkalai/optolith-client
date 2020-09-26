@@ -7,7 +7,7 @@ import { findWithDefault, foldrWithKey, lookup } from "../../Data/OrderedMap"
 import { Record } from "../../Data/Record"
 import { uncurryN, uncurryN5 } from "../../Data/Tuple/Curry"
 import { IdPrefixes } from "../Constants/IdPrefixes"
-import { AdvantageId, CombatTechniqueId, SpecialAbilityId } from "../Constants/Ids.gen"
+import { AdvantageId, AttrId_dexterity, CombatTechniqueId, SpecialAbilityId } from "../Constants/Ids.gen"
 import { ActivatableDependent } from "../Models/ActiveEntries/ActivatableDependent"
 import { createSkillDependentWithValue6, SkillDependent } from "../Models/ActiveEntries/SkillDependent"
 import { HeroModel, HeroModelRecord } from "../Models/Hero/HeroModel"
@@ -52,17 +52,19 @@ const getPrimaryAttrMod =
       max (0)
     )
 
-const getAttackBase =
-  (attributes: HeroModel["attributes"]) =>
-  (wiki_entry: Record<CombatTechnique>) =>
-  (hero_entry: Record<SkillDependent>): number =>
-    pipe_ (
-      CTA.gr (wiki_entry) === 2
-        ? CTA.primary (wiki_entry)
-        : List (prefixId (IdPrefixes.ATTRIBUTES) (1)),
-      getPrimaryAttrMod (attributes),
-      add (SDA.value (hero_entry))
-    )
+    const getAttackBase =
+    (attributes: HeroModel["attributes"]) =>
+    (wiki_entry: Record<CombatTechnique>) =>
+    (hero_entry: Record<SkillDependent>): number =>
+      pipe_ (
+        CTA.gr (wiki_entry) === 2
+          ? CTA.primary (wiki_entry)
+          : List (prefixId (IdPrefixes.ATTRIBUTES) (1)),
+        getPrimaryAttrMod (attributes),
+        add (SDA.value (hero_entry))
+      )
+  
+    
 
 const getParryBase =
   (attributes: HeroModel["attributes"]) =>

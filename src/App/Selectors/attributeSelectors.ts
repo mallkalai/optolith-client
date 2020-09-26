@@ -288,6 +288,12 @@ export const getCarryingCapacity = createMaybeSelector (
   pipe (lookup<string> (AttrId.Strength), maybe (8) (AtDA.value), multiply (2))
 )
 
+export const get = createMaybeSelector (
+  getAttributes,
+  pipe (lookup<string> (AttrId.Strength), maybe (8) (AtDA.value), multiply (2))
+)
+
+
 export const getAdjustmentValue = createMaybeSelector (
   getRace,
   fmap (pipe (Race.A.attributeAdjustmentsSelection, fst))
