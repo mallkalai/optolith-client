@@ -72,7 +72,7 @@ multiply(2)
 
 
 )
-
+//endlich
 const getAttackBase =
 (attributes: HeroModel["attributes"]) => //attributes ist vom TYP OrdereMap, mit einem String als Key und den Attributsobjekten als Value, diese enthalten id, value etc.
 (wiki_entry: Record<CombatTechnique>) => //wiki entry ist ein Record vom TYP CombatTechnique
