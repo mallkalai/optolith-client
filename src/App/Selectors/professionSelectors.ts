@@ -108,6 +108,7 @@ interface SkillGroupLists {
   natureSkills: List<Record<IncreasableForView>>
   knowledgeSkills: List<Record<IncreasableForView>>
   craftSkills: List<Record<IncreasableForView>>
+  thinkSkills: List<Record<IncreasableForView>>
 }
 
 const getGroupSliceKey = (gr: number): keyof SkillGroupLists => {
@@ -123,9 +124,12 @@ const getGroupSliceKey = (gr: number): keyof SkillGroupLists => {
 
     case 4:
       return "knowledgeSkills"
+    
+    case 5:
+      return "craftSkills"
 
     default:
-      return "craftSkills"
+      return "thinkSkills"
   }
 }
 
@@ -354,6 +358,7 @@ export const getAllProfessions = createMaybeSelector (
           natureSkills,
           knowledgeSkills,
           craftSkills,
+          thinkSkills,
         } = pipe_ (
               p,
               PA.skills,
@@ -383,6 +388,7 @@ export const getAllProfessions = createMaybeSelector (
                       natureSkills: List (),
                       knowledgeSkills: List (),
                       craftSkills: List (),
+                      thinkSkills: List ()
                     })
             )
 
@@ -411,6 +417,7 @@ export const getAllProfessions = createMaybeSelector (
           mappedNatureSkills: natureSkills,
           mappedKnowledgeSkills: knowledgeSkills,
           mappedCraftSkills: craftSkills,
+          mappedThinkSkills: thinkSkills,
           mappedSpells:
             thrush (PA.spells (p))
                    (mapMaybe<

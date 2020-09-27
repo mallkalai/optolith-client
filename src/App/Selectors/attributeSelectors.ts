@@ -163,10 +163,20 @@ export const getAttributesForSheet = createMaybeSelector (
 export const getMaxAttributeValueByID =
   (attributes: HeroModel["attributes"]) =>
     pipe (
-      mapMaybe (pipe (lookupF (attributes), fmap (AtDA.value))),
+      mapMaybe (pipe (lookupF (attributes), fmap (AtDA.value))),//??pipe gibt eine Funktion zurück, die zuerst lookupF auf die attribute anwendendet (mit Key=ID)und anschließend den value zurückgibt,
+                                             //mapMaype bekommt also eine Funktion F und die Liste mit IDs, die Funktion F(ATTR_1) gibt somit den Mut_Wert zurück
       consF (8),
       maximum
     )
+
+    export const getAttribute =
+    (attributes: HeroModel["attributes"]) =>
+      pipe(
+        mapMaybe (pipe (lookupF (attributes), fmap (AtDA.value))),//??pipe gibt eine Funktion zurück, die zuerst lookupF auf die attribute anwendendet (mit Key=ID)und anschließend den value zurückgibt,
+                                               //mapMaype bekommt also eine Funktion F und die Liste mit IDs, die Funktion F(ATTR_1) gibt somit den Mut_Wert zurück
+       maximum 
+      )
+     
 
 export const getPrimaryMagicalAttributes = createMaybeSelector (
   getWikiAttributes,

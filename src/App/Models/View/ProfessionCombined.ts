@@ -26,6 +26,7 @@ export interface ProfessionCombined {
   mappedNatureSkills: List<Record<IncreasableForView>>
   mappedKnowledgeSkills: List<Record<IncreasableForView>>
   mappedCraftSkills: List<Record<IncreasableForView>>
+  mappedThinkSkills: List<Record<IncreasableForView>>
   mappedSpells: List<Record<IncreasableForView> | Record<IncreasableListForView>>
   mappedLiturgicalChants: List<Record<IncreasableForView> | Record<IncreasableListForView>>
   mappedVariants: List<Record<ProfessionVariantCombined>>
@@ -45,6 +46,7 @@ export const ProfessionCombined =
                 mappedNatureSkills: List.empty,
                 mappedKnowledgeSkills: List.empty,
                 mappedCraftSkills: List.empty,
+                mappedThinkSkills: List.empty,
                 mappedSpells: List.empty,
                 mappedLiturgicalChants: List.empty,
                 mappedVariants: List.empty,

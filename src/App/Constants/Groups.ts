@@ -62,6 +62,7 @@ export enum SkillGroup {
   Nature = 3,
   Knowledge = 4,
   Craft = 5,
+  Think=6,
 }
 
 export enum CombatTechniqueGroupId {

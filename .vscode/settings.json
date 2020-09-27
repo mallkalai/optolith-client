@@ -18,5 +18,6 @@
     "eslint.lintTask.options": "\"src/**\" -c \"./.eslintrc.yaml\" --ext=\"ts\" --ext=\"tsx\" --ignore-pattern=\"./src/App/Utilities/YAML/Schema/**\"",
     "editor.tabSize": 2,
     "editor.detectIndentation": false,
-    "git.decorations.enabled": false
+    "git.decorations.enabled": false,
+    "explorer.decorations.colors": false
 }

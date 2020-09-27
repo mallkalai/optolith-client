@@ -398,7 +398,8 @@ function SkillsList (props: SkillsListProps): JSX.Element {
     PCA.mappedSocialSkills (profession),
     PCA.mappedNatureSkills (profession),
     PCA.mappedKnowledgeSkills (profession),
-    PCA.mappedCraftSkills (profession)
+    PCA.mappedCraftSkills (profession),
+    PCA.mappedThinkSkills (profession)
   )
 
   return (

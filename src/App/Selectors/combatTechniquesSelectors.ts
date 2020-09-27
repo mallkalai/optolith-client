@@ -2,12 +2,12 @@ import { ident, thrush } from "../../Data/Function"
 import { fmap, fmapF } from "../../Data/Functor"
 import { cons, consF, elem, filter, fnull, List, map, maximum } from "../../Data/List"
 import { fromJust, isJust, Just, liftM2, Maybe, maybe, Nothing, or } from "../../Data/Maybe"
-import { add, divideBy, gt, max, subtractBy } from "../../Data/Num"
+import { add, divideBy, gt, multiply } from "../../Data/Num"
 import { findWithDefault, foldrWithKey, lookup } from "../../Data/OrderedMap"
 import { Record } from "../../Data/Record"
 import { uncurryN, uncurryN5 } from "../../Data/Tuple/Curry"
 import { IdPrefixes } from "../Constants/IdPrefixes"
-import { AdvantageId, AttrId_dexterity, CombatTechniqueId, SpecialAbilityId } from "../Constants/Ids.gen"
+import { AdvantageId, CombatTechniqueId, SpecialAbilityId } from "../Constants/Ids.gen"
 import { ActivatableDependent } from "../Models/ActiveEntries/ActivatableDependent"
 import { createSkillDependentWithValue6, SkillDependent } from "../Models/ActiveEntries/SkillDependent"
 import { HeroModel, HeroModelRecord } from "../Models/Hero/HeroModel"
@@ -41,8 +41,8 @@ const ADA = ActivatableDependent.A
 /**
  * Calculate the AT or PA mod by passing the current attributes' state as well
  * as the relevant ids.
- */
-const getPrimaryAttrMod =
+ *
+const getPrimaryAttrMod = // In dieser Funktion muss neben attributes noch eine Liste mit IDs eingegeben. getMaxAttribute nimmt die IDListe und den attributes-record beides als argumente
   (attributes: HeroModel["attributes"]) =>
     pipe (
       getMaxAttributeValueByID (attributes),
@@ -50,21 +50,48 @@ const getPrimaryAttrMod =
       divideBy (3),
       Math.floor,
       max (0)
-    )
+      
+)*/
+const getMCBasis = //Melee Combat
+(attributes: HeroModel["attributes"]) =>
+  pipe_(
+    List (prefixId (IdPrefixes.ATTRIBUTES) (6)),
+  getMaxAttributeValueByID (attributes),
+  add(pipe_ (
+    List (prefixId (IdPrefixes.ATTRIBUTES) (8)),
+    getMaxAttributeValueByID (attributes)
 
-    const getAttackBase =
-    (attributes: HeroModel["attributes"]) =>
-    (wiki_entry: Record<CombatTechnique>) =>
-    (hero_entry: Record<SkillDependent>): number =>
-      pipe_ (
-        CTA.gr (wiki_entry) === 2
-          ? CTA.primary (wiki_entry)
-          : List (prefixId (IdPrefixes.ATTRIBUTES) (1)),
-        getPrimaryAttrMod (attributes),
-        add (SDA.value (hero_entry))
-      )
-  
-    
+  ))
+)
+
+const getRCBasis =(attributes: HeroModel["attributes"]) =>
+pipe_(
+List (prefixId (IdPrefixes.ATTRIBUTES) (5)),
+getMaxAttributeValueByID (attributes),
+multiply(2)
+
+
+)
+
+const getAttackBase =
+(attributes: HeroModel["attributes"]) => //attributes ist vom TYP OrdereMap, mit einem String als Key und den Attributsobjekten als Value, diese enthalten id, value etc.
+(wiki_entry: Record<CombatTechnique>) => //wiki entry ist ein Record vom TYP CombatTechnique
+(hero_entry: Record<SkillDependent>): number => //hero_entry ist ein Record vom Typ SkillDependent
+  pipe_(
+    //CTA.gr (wiki_entry) === 2 //Wir rufen den Accesor des Interfaces Combat Tchnique auf, mit dem wir auf den Wert aus wiki_entry zugraifen können
+    //  ? CTA.primary (wiki_entry) //Wir bekommen eine List mit Strings zurück, die die Primarys der Kampftechnik enthält
+     // : List (prefixId (IdPrefixes.ATTRIBUTES) (1)), //List macht ne Liste, prefixId bekommt ein Enum (hier aus der EnumListe Prefixes den Attributsprefix, das ist ATTR) und ein String oder Number
+                                                    //und verbindet die beiden, hier bekommt man also ATTR_1 heraus, das bedeutet MUT 
+  // getPrimaryAttrMod (attributes),// die funktion bekommt die ID in Listenfomr und attributes übergeben
+   // add (SDA.value (hero_entry))//wendet die Funktion SDA.Value auf hero_entry an und addiert den Wert 
+   CTA.gr (wiki_entry) === 2
+   ? getRCBasis(attributes)
+   : getMCBasis(attributes),
+    divideBy(3),
+   Math.floor,
+   add (SDA.value (hero_entry))
+  )
+
 
 const getParryBase =
   (attributes: HeroModel["attributes"]) =>
@@ -74,11 +101,15 @@ const getParryBase =
     const curr_gr = CTA.gr (wiki_entry)
 
     return curr_gr === 2
-      || curr_id === prefixId (IdPrefixes.COMBAT_TECHNIQUES) (6)
       || curr_id === prefixId (IdPrefixes.COMBAT_TECHNIQUES) (8)
         ? Nothing
-        : Just (Math.round (SDA.value (hero_entry) / 2)
-                 + getPrimaryAttrMod (attributes) (CTA.primary (wiki_entry)))
+        : pipe_(
+          getMCBasis(attributes),
+          divideBy(3),
+          Math.floor,
+          Just
+
+        )
   }
 
 export const getCombatTechniquesForView = createMaybeSelector (
