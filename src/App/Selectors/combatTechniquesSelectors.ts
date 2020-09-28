@@ -42,35 +42,35 @@ const getMCBasis = //Melee Combat
 (attributes: HeroModel["attributes"]) =>
   pipe_(
     List (prefixId (IdPrefixes.ATTRIBUTES) (6)),
-  getMaxAttributeValueByID (attributes),
-  add(pipe_ (
-    List (prefixId (IdPrefixes.ATTRIBUTES) (8)),
-    getMaxAttributeValueByID (attributes)
+    getMaxAttributeValueByID (attributes),
+    add( 
+      pipe_ (
+        List (prefixId (IdPrefixes.ATTRIBUTES) (8)),
+        getMaxAttributeValueByID (attributes)
+      )
+    )
+  )
 
-  ))
-)
+const getRCBasis = //Ranged Combat
+(attributes: HeroModel["attributes"]) =>
+  pipe_(
+    List (prefixId (IdPrefixes.ATTRIBUTES) (5)),
+    getMaxAttributeValueByID (attributes),
+    multiply(2)
+  )
 
-const getRCBasis =(attributes: HeroModel["attributes"]) =>
-pipe_(
-List (prefixId (IdPrefixes.ATTRIBUTES) (5)),
-getMaxAttributeValueByID (attributes),
-multiply(2)
-
-
-)
 const getAttackBase =
 (attributes: HeroModel["attributes"]) => //attributes ist vom TYP OrdereMap, mit einem String als Key und den Attributsobjekten als Value, diese enthalten id, value etc.
 (wiki_entry: Record<CombatTechnique>) => //wiki entry ist ein Record vom TYP CombatTechnique
 (hero_entry: Record<SkillDependent>): number => //hero_entry ist ein Record vom Typ SkillDependent
   pipe_(
-   CTA.gr (wiki_entry) === 2
-   ? getRCBasis(attributes)
-   : getMCBasis(attributes),
+    CTA.gr (wiki_entry) === 2? 
+    getRCBasis(attributes) : 
+    getMCBasis(attributes),
     divideBy(3),
-   Math.floor,
-   add (SDA.value (hero_entry))
+    Math.floor,
+    add (SDA.value (hero_entry))
   )
-
 
 const getParryBase =
   (attributes: HeroModel["attributes"]) =>
