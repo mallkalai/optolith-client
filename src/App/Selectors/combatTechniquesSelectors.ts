@@ -38,20 +38,6 @@ const CTWAPBA = CombatTechniqueWithAttackParryBase.A
 const CTWRA = CombatTechniqueWithRequirements.A
 const ADA = ActivatableDependent.A
 
-/**
- * Calculate the AT or PA mod by passing the current attributes' state as well
- * as the relevant ids.
- *
-const getPrimaryAttrMod = // In dieser Funktion muss neben attributes noch eine Liste mit IDs eingegeben. getMaxAttribute nimmt die IDListe und den attributes-record beides als argumente
-  (attributes: HeroModel["attributes"]) =>
-    pipe (
-      getMaxAttributeValueByID (attributes),
-      subtractBy (8),
-      divideBy (3),
-      Math.floor,
-      max (0)
-      
-)*/
 const getMCBasis = //Melee Combat
 (attributes: HeroModel["attributes"]) =>
   pipe_(
@@ -77,12 +63,6 @@ const getAttackBase =
 (wiki_entry: Record<CombatTechnique>) => //wiki entry ist ein Record vom TYP CombatTechnique
 (hero_entry: Record<SkillDependent>): number => //hero_entry ist ein Record vom Typ SkillDependent
   pipe_(
-    //CTA.gr (wiki_entry) === 2 //Wir rufen den Accesor des Interfaces Combat Tchnique auf, mit dem wir auf den Wert aus wiki_entry zugraifen können
-    //  ? CTA.primary (wiki_entry) //Wir bekommen eine List mit Strings zurück, die die Primarys der Kampftechnik enthält
-     // : List (prefixId (IdPrefixes.ATTRIBUTES) (1)), //List macht ne Liste, prefixId bekommt ein Enum (hier aus der EnumListe Prefixes den Attributsprefix, das ist ATTR) und ein String oder Number
-                                                    //und verbindet die beiden, hier bekommt man also ATTR_1 heraus, das bedeutet MUT 
-  // getPrimaryAttrMod (attributes),// die funktion bekommt die ID in Listenfomr und attributes übergeben
-   // add (SDA.value (hero_entry))//wendet die Funktion SDA.Value auf hero_entry an und addiert den Wert 
    CTA.gr (wiki_entry) === 2
    ? getRCBasis(attributes)
    : getMCBasis(attributes),
