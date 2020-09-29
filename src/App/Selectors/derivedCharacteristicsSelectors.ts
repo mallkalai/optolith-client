@@ -306,29 +306,21 @@ export const getINI = createMaybeSelector (
 export const getMOV = createMaybeSelector (
   getRace,
   mapGetToMaybeSlice (getAdvantages) (AdvantageId.Nimble),
-  mapGetToMaybeSlice (getDisadvantages) (DisadvantageId.Maimed),
-  mapGetToMaybeSlice (getDisadvantages) (DisadvantageId.Slow),
-  mapGetToMaybeSlice (getAdvantages) (AdvantageId.LeichterGang),
+  mapGetToSliceWithProps (getAttributes) (AttrId.Intuition),
   getWiki,
-  (mrace, mnimble, mmaimed, mslow, mleichter_gang) => {
-    const mbase = fmapF (mrace)
-                        (pipe (
-                          Race.A.mov,
-                          base => Maybe.elem (true)
-                                             (fmapF (mmaimed)
-                                                    (pipe (
-                                                      getActiveSelections,
-                                                      elem<string | number> (3)
-                                                    )))
-                            ? divideBy2AndRound (base)
-                            : base
-                        ))
+  (mrace, mnimble, mag) => {
+    const mbase = fmapF (mrace)(Race.A.mov)
 
-    const mod = getModifierByIsActives (Just (0))
-                                       (List (mnimble, mleichter_gang))
-                                       (List (mslow))
+    const ag = getAttributeValueWithDefault (mag)
 
+    const mod = pipe_( getModifierByIsActives (Just (0))
+                                       (List (mnimble))
+                                       (List ()) , ag <= 10? add(-1): add(0),
+                                       ag > 15? add(1): add(0),
+                                       ag > 20? add(1): add(0))
+                                       
     const value = fmapF (mbase) (add (mod))
+    
 
     return DerivedCharacteristicValues<DCId.MOV> ({
       id: DCId.MOV,
