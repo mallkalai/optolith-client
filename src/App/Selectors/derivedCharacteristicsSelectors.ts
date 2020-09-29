@@ -306,7 +306,7 @@ export const getINI = createMaybeSelector (
 export const getMOV = createMaybeSelector (
   getRace,
   mapGetToMaybeSlice (getAdvantages) (AdvantageId.Nimble),
-  mapGetToSliceWithProps (getAttributes) (AttrId.Intuition),
+  mapGetToSliceWithProps (getAttributes) (AttrId.Agility),
   getWiki,
   (mrace, mnimble, mag) => {
     const mbase = fmapF (mrace)(Race.A.mov)
