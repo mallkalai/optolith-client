@@ -285,13 +285,10 @@ export const getDO = createMaybeSelector (
 )
 
 export const getINI = createMaybeSelector (
-  mapGetToSliceWithProps (getAttributes) (AttrId.Courage),
-  mapGetToSliceWithProps (getAttributes) (AttrId.Agility),
+  mapGetToSliceWithProps (getAttributes) (AttrId.Intuition),
   mapGetToSlice (getSpecialAbilities) (SpecialAbilityId.CombatReflexes),
-  (mcou, magi, mcombat_reflexes) => {
-    const base = divideBy2AndRound (
-      getAttributeValueWithDefault (mcou) + getAttributeValueWithDefault (magi)
-    )
+  (mini, mcombat_reflexes) => {
+    const base = getAttributeValueWithDefault (mini) 
 
     const mod = getFirstLevel (mcombat_reflexes)
 
